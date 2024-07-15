@@ -413,6 +413,22 @@ describe('MessageLogic', () => {
         this.getMockMessage(messageId.toHexString(), userId.toHexString()),
       );
     }
+
+    async tagMessage(messageId: ObjectId, tags: string[]): Promise<ChatMessageModel> {
+      const updatedMessage = {
+        ...mockCreatedMessage,
+        tags,
+      };
+      return Promise.resolve(updatedMessage);
+    }
+
+    async getMessagesByTags(tags: string[]): Promise<ChatMessageModel[]> {
+      const messages = [
+        { ...mockCreatedMessage, tags: ['tag1'] },
+        { ...mockCreatedMessage, tags: ['tag2'] },
+      ];
+      return Promise.resolve(messages.filter((message) => tags.some(tag => message.tags.includes(tag))));
+    }
   }
 
   class MockPermissionsService {
@@ -1444,6 +1460,30 @@ describe('MessageLogic', () => {
       await expect(
         messageLogic.removeVote(messageId, option, validUser),
       ).rejects.toEqual(expectedError);
+    });
+  });
+
+  describe('tagMessage', () => {
+    it('should tag a message with given tags', async () => {
+      const tags = ['tag1', 'tag2'];
+      const result = await messageLogic.tagMessage(messageId, tags);
+      expect(result.tags).toEqual(tags);
+    });
+  });
+
+  describe('getMessagesByTags', () => {
+    it('should return messages that match given tags', async () => {
+      const tags = ['tag1', 'tag2'];
+      const messages = [
+        { id: new ObjectID(), tags: ['tag1'] },
+        { id: new ObjectID(), tags: ['tag2'] },
+      ] as any[];
+
+      messageData.getMessagesByTags = jest.fn().mockResolvedValue(messages);
+
+      const result = await messageLogic.getMessagesByTags(tags);
+
+      expect(result).toEqual(messages);
     });
   });
 });
