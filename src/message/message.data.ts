@@ -368,7 +368,26 @@ export class MessageData {
     return chatMessageToObject(updatedResult);
   }
 
+  async tagMessage(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+    const message = await this.getMessage(messageId.toHexString());
+
+    message.tags = [...new Set([...(message.tags || []), ...tags])];
+
+    const updatedMessage = await this.chatMessageModel.findByIdAndUpdate(
+      messageId,
+      { $set: { tags: message.tags } },
+      { new: true }
+    );
+
+    if (!updatedMessage) {
+      throw new Error('Message not found');
+    }
+
+    return chatMessageToObject(updatedMessage);
+  }
+
   async getMessagesByTags(tags: string[]): Promise<ChatMessage[]> {
-    return await this.chatMessageModel.find({ tags: { $in: tags } }).exec();
+    const messages = await this.chatMessageModel.find({ tags: { $in: tags } }).exec();
+    return messages.map(chatMessageToObject);
   }
 }
