@@ -697,4 +697,11 @@ export class MessageLogic implements IMessageLogic {
 
     return pollOption;
   }
+  async tagMessage(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+    return await this.messageData.tagMessage(messageId, tags);
+  }
+
+  async getMessagesByTags(tags: string[]): Promise<ChatMessage[]> {
+    return await this.messageData.getMessagesByTags(tags);
+  }
 }
