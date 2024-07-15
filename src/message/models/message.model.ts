@@ -154,7 +154,7 @@ export class ChatMessageModel {
   })
   reactions?: Reaction[];
 
-  @Prop({ type: [String], index: true })
+  @Prop({ type: [String], index: true, default: [] })
   tags?: string[];
   
   /**

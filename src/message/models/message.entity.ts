@@ -150,7 +150,7 @@ export class ChatMessage {
   isSenderBlocked?: boolean;
 
   @Field(() => [String], { defaultValue: [] })
-  tags: string[]
+  tags?: string[]
 }
 
 /***
