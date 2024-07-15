@@ -118,6 +118,9 @@ export class MessageDto {
 
   @Field(() => RichContentDto, { nullable: true })
   richContent?: RichContentDto;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];  // Added field for tags
 }
 
 // TODO Min - Max on limit
@@ -131,6 +134,9 @@ export class GetMessageDto {
 
   @Field({ defaultValue: 40 })
   limit: number;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];  // Added field for tags
 }
 
 @InputType()
