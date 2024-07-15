@@ -367,4 +367,8 @@ export class MessageData {
 
     return chatMessageToObject(updatedResult);
   }
+
+  async getMessagesByTags(tags: string[]): Promise<ChatMessage[]> {
+    return await this.chatMessageModel.find({ tags: { $in: tags } }).exec();
+  }
 }
